@@ -25,6 +25,29 @@ This skill:
 - tells the user to upload local `.visu` files to Visu.Haus to edit, save, and
   share.
 
+## 3D Skill
+
+```text
+/visu:3d-visu
+```
+
+Use this skill for the fast, high-fidelity 3D rendering route proven by
+**Liquid Violet Metaballs**. It reuses the technology path, not the look:
+Babylon.js, fullscreen WebGL, custom fragment shaders, SDF/raymarching or
+equivalent procedural GPU fields, procedural lighting/reflections, and compact
+uniform-driven motion. It also reuses the render direction that made that visu
+work: procedural environment light, studio highlights, rim/Fresnel edges, soft
+occlusion, tone mapping, bloom, FXAA, and material recipes for chrome, glass,
+gel, liquid, mineral, energy, and product-like surfaces.
+
+Requests can be broad - objects, spaces, portals, terrain, typography-inspired
+forms, liquid, crystal, chrome, glass, or abstract scenes - while staying on the
+same performance-oriented rendering path and lighting/material quality bar.
+
+This route is intentionally exclusive for `/3D-Visu` style requests, so it
+avoids mesh-heavy scenes, imported models, DOM animation, Canvas 2D, p5.js, and
+Three.js for the core visual.
+
 ## Connection
 
 The plugin includes the Visu.Haus connection configuration:
