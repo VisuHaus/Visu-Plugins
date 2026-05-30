@@ -1,43 +1,86 @@
 # Visu.Haus Plugins
 
-Claude plugin marketplace for creating interactive Visu.Haus visuals and tools.
+Create interactive Visu.Haus visuals directly from your AI workspace.
+
+This marketplace installs the Visu.Haus plugin and the `/visu:create-visu`
+skill. Use it to turn a prompt, image reference, brand direction, shader idea,
+or motion concept into a polished `.visu` visual.
+
+When your Visu.Haus connection is active, new visus are saved directly to
+**My Visus** and you get a ready-to-open link. If the connection is not active
+in the current client, supported local workflows can create a `.visu` file for
+manual upload.
 
 ## Install
 
-In Claude, open **Customize -> Personal plugins -> Add marketplace**, then add:
+Open your plugin settings, choose **Add marketplace**, and add:
 
 ```text
 Visu-Haus/Visu-Plugins
 ```
 
-Install and enable the **visu** plugin.
+Then install and enable the **visu** plugin.
 
-## Use
+## Create A Visu
 
-Run the create tool skill:
+Start with:
 
 ```text
 /visu:create-visu
 ```
 
-Some Claude surfaces may display the skill name as `create-visu`; plugin installs usually namespace skills with the plugin name, so the full command is `/visu:create-visu`.
+Then describe what you want to make:
 
-## Connection Flow
+```text
+/visu:create-visu
+Create a slow liquid chrome flower with soft orbiting particles, pointer
+interaction, and controls for bloom, density, color, and motion speed.
+```
 
-The plugin tries the Visu.Haus connection first.
+You can also attach images or describe a product, campaign, logo, texture,
+gallery, video shader, audio-reactive visual, or typography system.
 
-If the connection is active, Claude saves the result directly to **My Visus** and returns the saved link.
+## What Happens Next
 
-If the connection is not active, Claude should guide you through connecting the Visu.Haus MCP. If connection is unavailable in the current client, or you choose not to connect, supported local clients can create a `.visu` file instead.
+The plugin checks your Visu.Haus connection first.
 
-Local `.visu` files must be uploaded to Visu.Haus to edit, save, and share them.
+If connected:
 
-## Included Plugin
+- your visu is created;
+- it is saved directly to **My Visus**;
+- you receive a Visu.Haus link.
 
-- `visu`: Visu.Haus MCP connection plus the `create-visu` skill.
+If not connected:
+
+- the plugin asks you to connect Visu.Haus before continuing;
+- if connection is not available, it can create a local `.visu` file in
+  supported clients;
+- upload that `.visu` file to Visu.Haus to edit, save, and share it.
+
+## Good Prompts
+
+Try describing subject, material, motion, interaction, and format:
+
+```text
+Create a 9:16 reactive poster for a perfume launch. It should feel like black
+glass, silver mist, and slow magnetic particles. Add controls for intensity,
+mist, palette, and motion speed.
+```
+
+```text
+Create a video shader that turns an uploaded clip into liquid neon feedback
+with a procedural fallback before a video is added.
+```
+
+```text
+Create an interactive typography visu using the word AURA, with soft cloth
+distortion, pointer pull, and a minimal editorial palette.
+```
 
 ## Requirements
 
-- Claude with plugin support.
-- A Visu.Haus account to save directly to My Visus.
-- A Claude client with local file support for local `.visu` fallback.
+- A compatible plugin-enabled AI client.
+- A Visu.Haus account to save directly to **My Visus**.
+- Local file support only if you want `.visu` fallback files.
+
+
