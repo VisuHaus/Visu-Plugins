@@ -2,7 +2,7 @@
   "name": "visu",
   "displayName": "Visu.Haus",
   "description": "Create interactive Visu.Haus .visu visuals from prompts, references, and creative direction.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Visu.Haus",
     "email": "hello@visu.haus"

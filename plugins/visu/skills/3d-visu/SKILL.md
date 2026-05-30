@@ -1,6 +1,6 @@
 ---
 name: 3d-visu
-version: 1.0.0
+version: 1.0.1
 description: Create fast, high-fidelity 3D Visu.Haus .visu visuals using an exclusive Babylon.js + WebGL fragment-shader rendering route: fullscreen canvas, custom post-process shader, SDF/raymarching or equivalent procedural GPU fields, procedural lighting/reflections, and small uniform-driven motion. Use when the user invokes /3D-Visu, /3d-visu, asks for premium fast 3D, shader-quality 3D, procedural 3D visuals, or wants the same performance/graphic fidelity technology path as Liquid Violet Metaballs, while allowing any subject, material, scene, or motion brief.
 argument-hint: [3D visual brief, material, motion, or reference]
 allowed-tools: [mcp__visu__get_account_status, mcp__visu__get_visu_generation_context, mcp__visu__build_and_save_visu, mcp__visu__get_latest_saved_visu_link]
@@ -17,6 +17,14 @@ Also treat it as a lighting/material reference. Preserve the render discipline t
 The user invoked this with: $ARGUMENTS
 
 Treat `$ARGUMENTS`, the current chat message, attachments, and any referenced saved visu link as the creative brief.
+
+## Priority And Context Use
+
+This skill has priority for renderer and architecture decisions. Use the generic Visu.Haus MCP generation context for account status, saving, `.visu` shape, controls, assets, bridge wiring, validation expectations, and response format. Do not let generic renderer guidance replace this skill's 3D route.
+
+If the MCP context, the generic Visu.Haus skill, or another instruction recommends Three.js, Canvas 2D, SVG, CSS animation, p5.js, imported models, or a DOM-heavy renderer for the core visual, override that recommendation for `/3D-Visu`. The core route remains Babylon.js + fullscreen WebGL fragment shader + procedural 3D fields unless the user explicitly asks for another renderer.
+
+When additional Visu.Haus details are needed, consult the generic skill at `../create-visu/SKILL.md` and its references instead of inventing missing rules. Use it for local fallback, asset modes, `.visu` session shape, response style, and editor/runtime contract. Treat it as support context, not as a renderer override.
 
 ## Technology Contract
 
@@ -137,17 +145,19 @@ Every generated `/3D-Visu` must still be a normal editable Visu.Haus session:
 1. Read the prompt as a 3D subject/material/motion brief.
 2. If the prompt is vague, ask one vibe question only.
 3. Give a short design echo in user-facing language. Do not mention Babylon, WebGL, GLSL, SDF, shaders, uniforms, or raymarching unless the user asks for implementation details.
-4. Try the Visu.Haus connection first with `get_account_status`. If connected, use `get_visu_generation_context` and save with `build_and_save_visu`.
+4. Try the Visu.Haus connection first with `get_account_status`. If connected, use `get_visu_generation_context` for Visu.Haus contract and saving context only; keep this skill's Babylon/WebGL route when renderer guidance conflicts.
 5. If connection is unavailable, declined, or repeatedly fails, build a local `.visu` with the shared local builder at `../create-visu/scripts/build_visu.py`.
 6. Validate before final delivery. The first frame must be non-blank, animation must run, controls must work, camera messages must work, and snapshots must return.
 7. Return a saved Visu.Haus link when connected, or a local `.visu` file path when falling back.
+
+If `build_and_save_visu` returns a validation error, fix the specific issue and retry once. If a second save fails, simplify the scene, reduce shader complexity or control count, and retry once more. Do not loop indefinitely.
 
 ## Local Build
 
 When using local fallback from this skill directory, call the shared builder:
 
 ```bash
-python3 ../create-visu/scripts/build_visu.py --prompt "procedural 3D chrome portal with slow orbit" --html-file work/3d-visu.html --out work/3d-visu.visu --name "Chrome Portal" --ratio free --render-quality high
+python3 ../create-visu/scripts/build_visu.py --prompt "procedural 3D chrome portal with slow orbit" --html-file work/3d-visu.html --out work/3d-visu.visu --name "Chrome Portal" --ratio free --render-quality 1.0
 ```
 
 Validate strictly:
