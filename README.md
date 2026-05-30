@@ -6,10 +6,8 @@ This marketplace installs the Visu.Haus plugin and the `/visu:create-visu`
 skill. Use it to turn a prompt, image reference, brand direction, shader idea,
 or motion concept into a polished `.visu` visual.
 
-When your Visu.Haus connection is active, new visus are saved directly to
-**My Visus** and you get a ready-to-open link. If the connection is not active
-in the current client, supported local workflows can create a `.visu` file for
-manual upload.
+Choose whether to save new visus directly to **My Visus** through your
+Visu.Haus connection, or create a local `.visu` file for manual upload.
 
 ## Install
 
@@ -42,19 +40,19 @@ gallery, video shader, audio-reactive visual, or typography system.
 
 ## What Happens Next
 
-The plugin checks your Visu.Haus connection first.
+The plugin asks where to deliver the visu if your prompt does not make it clear.
 
-If connected:
+If you choose your Visu.Haus account:
 
 - your visu is created;
+- the plugin checks your Visu.Haus connection;
 - it is saved directly to **My Visus**;
 - you receive a Visu.Haus link.
 
-If not connected:
+If you choose a local file:
 
-- the plugin asks you to connect Visu.Haus before continuing;
-- if connection is not available, it can create a local `.visu` file in
-  supported clients;
+- the plugin skips the connection;
+- it creates a local `.visu` file in supported clients;
 - upload that `.visu` file to Visu.Haus to edit, save, and share it.
 
 ## Good Prompts
@@ -81,11 +79,11 @@ distortion, pointer pull, and a minimal editorial palette.
 
 - A compatible plugin-enabled AI client.
 - A Visu.Haus account to save directly to **My Visus**.
-- Local file support only if you want `.visu` fallback files.
+- Local file support only if you want `.visu` files.
 
 ## Included
 
 - `visu` plugin
 - `/visu:create-visu` skill
 - Visu.Haus connection configuration
-- Local `.visu` builder for supported fallback workflows
+- Local `.visu` builder for supported workflows

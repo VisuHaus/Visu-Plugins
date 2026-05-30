@@ -3,10 +3,8 @@
 Create interactive Visu.Haus `.visu` visuals from a prompt, reference, or
 creative direction.
 
-When connected to Visu.Haus, this plugin saves new visuals directly to
-**My Visus** and returns a ready link. When not connected, it can guide the user
-through connection first, then fall back to a local `.visu` file only when the
-current client supports it.
+The plugin can either save new visuals directly to **My Visus** through the
+Visu.Haus connection, or create a local `.visu` file for manual upload.
 
 ## Skill
 
@@ -17,11 +15,10 @@ current client supports it.
 This skill:
 
 - creates polished interactive `.visu` visuals;
-- uses the Visu.Haus connection first;
-- saves directly to My Visus when connected;
-- asks the user to connect before falling back;
-- creates a local `.visu` file only when connection is unavailable, declined,
-  or repeatedly fails;
+- asks whether to save to a Visu.Haus account or create a local `.visu` file
+  when the destination is unclear;
+- checks the Visu.Haus connection only for account saves;
+- creates local `.visu` files without calling the connection;
 - tells the user to upload local `.visu` files to Visu.Haus to edit, save, and
   share.
 
