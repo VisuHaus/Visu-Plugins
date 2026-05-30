@@ -1,0 +1,76 @@
+Visu.Haus Public Plugin License
+
+Copyright (c) 2026 Lucas Luz / Visu.Haus. All rights reserved.
+
+This Visu.Haus plugin package, including its skills, instructions, scripts,
+references, examples, assets, and associated documentation (the "Plugin"), is
+owned by Lucas Luz / Visu.Haus.
+
+1. Public Installation License
+
+Visu.Haus grants you a limited, personal, non-exclusive, non-transferable,
+revocable license to install and use the Plugin with Claude and Visu.Haus.
+
+The Plugin may be publicly available so users can install it from a Claude
+plugin marketplace. Public availability does not grant ownership of the Plugin,
+the Visu.Haus brand, the Visu.Haus service, or any hosted Visu.Haus account
+features.
+
+2. Account and Service Access
+
+Using the Plugin does not automatically grant access to paid Visu.Haus
+features, My Visus, hosting, storage, account actions, generation limits,
+premium features, or other Visu.Haus services.
+
+Saving directly to My Visus, managing saved visus, using account-linked
+features, and accessing any gated Visu.Haus capability requires a valid
+Visu.Haus account and is controlled by the Visu.Haus MCP, account state, plan,
+fair-use limits, storage limits, and Terms of Use.
+
+If the Visu.Haus connection is not active, supported local clients may create a
+local .visu file for manual upload. Local file creation does not mean the file
+was saved to a Visu.Haus account.
+
+3. Restrictions
+
+You may not, and may not allow anyone else to:
+
+(a) sell, resell, sublicense, rent, lease, or commercially redistribute the
+Plugin as a standalone product;
+(b) use the Plugin, Visu.Haus name, Visu.Haus marks, or Visu.Haus materials to
+misrepresent affiliation, endorsement, or ownership;
+(c) remove, alter, or obscure copyright, license, proprietary, or attribution
+notices;
+(d) use the Plugin to bypass Visu.Haus access controls, plan checks, usage
+limits, billing systems, technical restrictions, or platform restrictions;
+(e) use the Plugin to operate or promote a competing visual generation, visual
+editor, plugin marketplace, or automation service in a way that copies or
+substantially imitates Visu.Haus protected materials.
+
+4. Outputs and User Content
+
+This License governs the Plugin itself. It does not transfer ownership of your
+own prompts, uploaded media, or original user content to Visu.Haus. Rights in
+visual outputs, saved visus, exports, and library items are governed by the
+Visu.Haus Terms of Use and any applicable account, subscription, provider, or
+third-party terms.
+
+5. No Warranty
+
+THE PLUGIN IS PROVIDED "AS IS" AND "AS AVAILABLE." TO THE MAXIMUM EXTENT
+PERMITTED BY LAW, VISU.HAUS DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED,
+INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+TITLE, NON-INFRINGEMENT, AVAILABILITY, ACCURACY, AND ERROR-FREE OPERATION.
+
+6. Limitation of Liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, VISU.HAUS AND ITS OPERATORS WILL NOT
+BE LIABLE FOR INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR
+PUNITIVE DAMAGES, OR FOR LOST PROFITS, LOST REVENUE, LOST DATA, LOST BUSINESS,
+SERVICE INTERRUPTION, THIRD-PARTY CHARGES, PROVIDER COSTS, OR DOWNSTREAM USE
+OF OUTPUTS.
+
+7. Changes
+
+Visu.Haus may update this License, the Plugin, supported clients, available
+skills, MCP tools, access requirements, and service behavior over time.
