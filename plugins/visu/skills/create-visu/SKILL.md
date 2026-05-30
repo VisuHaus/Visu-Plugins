@@ -1,6 +1,6 @@
 ---
 name: create-visu
-version: 1.0.2
+version: 1.0.3
 description: Create, refine, iterate on, and save Visu.Haus .visu tools - interactive generative visuals with polished motion, controls, and optional webcam, typography, and editor-uploaded asset modes. Use when the user asks to create a visual tool, says "make a visu / Visu.Haus", asks for video shaders, image shaders, multi-image galleries, audio-reactive visuals, SVG/logo visuals, refines a previous visu, asks to save/publish, or describes a visual subject + material + motion the studio should ship.
 argument-hint: [visual brief, reference, or saved visu link]
 allowed-tools: [mcp__visu__get_account_status, mcp__visu__build_and_save_visu, mcp__visu__get_latest_saved_visu_link]
@@ -22,6 +22,7 @@ User-facing messages speak design, never code.
 - Use the Visu.Haus connection only when the user chooses account save. For local `.visu` delivery, do not call MCP tools.
 - This skill already contains the generation guidance needed to build the visu. Do not call MCP for extra generation context.
 - Make delivery easy to scan: use `🔗` for saved Visu.Haus links and `📁` for local `.visu` files.
+- Use the VISU ASCII celebration mark only after a successful saved link or local `.visu` delivery. Do not use it for discovery, connection, setup, or error messages.
 
 Show HTML/JS only if the user explicitly asks ("show me the code", "what's in the HTML"). Otherwise: zero technical language in chat. The user asked for a Visu, not source code. Deliver the Visu.
 
@@ -41,14 +42,22 @@ Treat `$ARGUMENTS`, the current chat message, attachments, and any referenced sa
 6. **Local delivery.** If destination is local, do not call MCP tools. Use `scripts/build_visu.py` to wrap the visual in a `.visu` file, then validate locally. After delivering the local file, ask whether the user wants to save it to their Visu.Haus account too.
 7. **Account delivery.** If destination is account, call `get_account_status`. If connected, call `build_and_save_visu` with the original prompt, internal visual document, short name, ratio, source, assets, and render quality. The server wraps, validates, saves, and returns the saved link.
 8. **Ship gate.** Hard gate: first frame is non-blank, animation runs, control bridge works, snapshot returns, and any requested asset mode opens the correct editor upload lane. Any failure -> regenerate the failing piece silently before responding.
-9. **Final response.** Return a saved My Visus link when account delivery succeeds, or a local `.visu` path/file when local delivery is chosen. Never deliver raw internal visual code as the final result.
-   Connected format:
+9. **Final response.** Return a saved My Visus link when account delivery succeeds, or a local `.visu` path/file when local delivery is chosen. Never deliver raw internal visual code as the final result. On successful delivery, begin with this VISU ASCII celebration mark exactly:
+   ```
+    __      _______  _____ _    _
+    \ \    / /_   _|/ ____| |  | |
+     \ \  / /  | | | (___ | |  | |
+      \ \/ /   | |  \___ \| |  | |
+       \  /   _| |_ ____) | |__| |
+        \/   |_____|_____/ \____/
+   ```
+   Connected format after the celebration mark:
    ```
    Liquid Chrome Flower
    ↳ 1 version · pointer interaction · 6 controls
    ↳ 🔗 Visu ready: [saved My Visus link]
    ```
-   Local delivery format:
+   Local delivery format after the celebration mark:
    ```
    Liquid Chrome Flower
    ↳ 1 version · pointer interaction · 6 controls
@@ -92,6 +101,8 @@ The user-facing output is always one of:
 1. A saved Visu.Haus link prefixed with `🔗`, when the Visu.Haus connection is active.
 2. A `.visu` file/path prefixed with `📁`, when local delivery is chosen.
 3. A short destination or connection/setup message, when generation cannot continue yet.
+
+Successful link/file deliveries may start with the VISU ASCII celebration mark. Keep the saved link or local file path directly below the title/details so the result stays easy to act on.
 
 After local delivery, always ask whether the user wants to save the visu to their Visu.Haus account too.
 
