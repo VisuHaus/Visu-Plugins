@@ -1,6 +1,6 @@
 ---
 name: create-visu
-version: 1.0.1
+version: 1.0.2
 description: Create, refine, iterate on, and save Visu.Haus .visu tools - interactive generative visuals with polished motion, controls, and optional webcam, typography, and editor-uploaded asset modes. Use when the user asks to create a visual tool, says "make a visu / Visu.Haus", asks for video shaders, image shaders, multi-image galleries, audio-reactive visuals, SVG/logo visuals, refines a previous visu, asks to save/publish, or describes a visual subject + material + motion the studio should ship.
 argument-hint: [visual brief, reference, or saved visu link]
 allowed-tools: [mcp__visu__get_account_status, mcp__visu__build_and_save_visu, mcp__visu__get_latest_saved_visu_link]
@@ -21,6 +21,7 @@ User-facing messages speak design, never code.
 - Start by determining delivery destination: save directly to the user's Visu.Haus account, or generate a local `.visu` file.
 - Use the Visu.Haus connection only when the user chooses account save. For local `.visu` delivery, do not call MCP tools.
 - This skill already contains the generation guidance needed to build the visu. Do not call MCP for extra generation context.
+- Make delivery easy to scan: use `🔗` for saved Visu.Haus links and `📁` for local `.visu` files.
 
 Show HTML/JS only if the user explicitly asks ("show me the code", "what's in the HTML"). Otherwise: zero technical language in chat. The user asked for a Visu, not source code. Deliver the Visu.
 
@@ -37,7 +38,7 @@ Treat `$ARGUMENTS`, the current chat message, attachments, and any referenced sa
 3. **Discovery (conditional).** If the prompt is vague (under ~8 words, no subject + material + motion, no reference image), ask **one** question - about *vibe*, never specs. Skip otherwise.
 4. **Design echo.** Before generating code, output 3–5 lines naming what you read: subject, material, motion, interaction, controls. Lets the user redirect cheaply.
 5. **Generate from this skill.** Build one complete internal visual document using this skill and its local references. Do **not** call `get_visu_generation_context`; the skill already carries the needed generation contract, runtime rules, asset routing, and quality process.
-6. **Local delivery.** If destination is local, do not call MCP tools. Use `scripts/build_visu.py` to wrap the visual in a `.visu` file, then validate locally.
+6. **Local delivery.** If destination is local, do not call MCP tools. Use `scripts/build_visu.py` to wrap the visual in a `.visu` file, then validate locally. After delivering the local file, ask whether the user wants to save it to their Visu.Haus account too.
 7. **Account delivery.** If destination is account, call `get_account_status`. If connected, call `build_and_save_visu` with the original prompt, internal visual document, short name, ratio, source, assets, and render quality. The server wraps, validates, saves, and returns the saved link.
 8. **Ship gate.** Hard gate: first frame is non-blank, animation runs, control bridge works, snapshot returns, and any requested asset mode opens the correct editor upload lane. Any failure -> regenerate the failing piece silently before responding.
 9. **Final response.** Return a saved My Visus link when account delivery succeeds, or a local `.visu` path/file when local delivery is chosen. Never deliver raw internal visual code as the final result.
@@ -45,15 +46,16 @@ Treat `$ARGUMENTS`, the current chat message, attachments, and any referenced sa
    ```
    Liquid Chrome Flower
    ↳ 1 version · pointer interaction · 6 controls
-   ↳ Visu ready: [saved My Visus link]
+   ↳ 🔗 Visu ready: [saved My Visus link]
    ```
    Local delivery format:
    ```
    Liquid Chrome Flower
    ↳ 1 version · pointer interaction · 6 controls
-   ↳ Visu file ready: [local .visu path]
-   ↳ Upload this .visu in Visu.Haus to edit, save, and share it.
+   ↳ 📁 Visu file ready: [local .visu path]
+   ↳ Want me to save this to your Visu.Haus account too?
    ```
+   If the user says yes after local delivery, verify the Visu.Haus connection and save the same visu to the account. Do not restart the creative process unless the user asks for changes.
 
 ## Connection Recovery
 
@@ -75,7 +77,8 @@ Do you want this saved to your Visu.Haus account, or as a local .visu file?
 If local delivery is used:
 
 ```
-Upload this .visu in Visu.Haus to edit, save, and share it.
+📁 Visu file ready: [local .visu path]
+Want me to save this to your Visu.Haus account too?
 ```
 
 Never imply that a local `.visu` file was saved to the user's account.
@@ -86,9 +89,11 @@ Never deliver raw HTML, JavaScript, JSON, schemas, validation logs, tool results
 
 The user-facing output is always one of:
 
-1. A saved Visu.Haus link, when the Visu.Haus connection is active.
-2. A `.visu` file/path, when local delivery is chosen.
+1. A saved Visu.Haus link prefixed with `🔗`, when the Visu.Haus connection is active.
+2. A `.visu` file/path prefixed with `📁`, when local delivery is chosen.
 3. A short destination or connection/setup message, when generation cannot continue yet.
+
+After local delivery, always ask whether the user wants to save the visu to their Visu.Haus account too.
 
 Do not give the user an HTML file as the final result. Internal visual code is only an ingredient used to build a `.visu`.
 
@@ -160,6 +165,7 @@ Use the Visu.Haus MCP only for account-linked delivery. Local `.visu` delivery m
 - Do not call `get_visu_generation_context` from this skill.
 - For account delivery, start with `get_account_status`.
 - For first account creation, use `build_and_save_visu`.
+- If the user accepts account save after local delivery, start with `get_account_status`, then save the same visu to the account without changing the design.
 - If a saved link is missing after a successful save, use `get_latest_saved_visu_link`.
 
 Use management tools only when the user asks:
