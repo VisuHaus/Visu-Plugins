@@ -83,4 +83,9 @@ distortion, pointer pull, and a minimal editorial palette.
 - A Visu.Haus account to save directly to **My Visus**.
 - Local file support only if you want `.visu` fallback files.
 
+## Included
 
+- `visu` plugin
+- `/visu:create-visu` skill
+- Visu.Haus connection configuration
+- Local `.visu` builder for supported fallback workflows

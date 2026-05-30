@@ -1,0 +1,6 @@
+{
+  "visu": {
+    "type": "http",
+    "url": "https://visu.haus/api/mcp"
+  }
+}

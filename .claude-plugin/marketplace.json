@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "visu-plugins",
+  "description": "Plugin marketplace for creating interactive Visu.Haus .visu visuals and tools.",
+  "owner": {
+    "name": "Visu.Haus",
+    "email": "hello@visu.haus"
+  },
+  "plugins": [
+    {
+      "name": "visu",
+      "description": "Create interactive Visu.Haus .visu visuals from prompts, references, and creative direction.",
+      "author": {
+        "name": "Visu.Haus"
+      },
+      "source": "./plugins/visu",
+      "category": "design",
+      "homepage": "https://visu.haus"
+    }
+  ]
+}

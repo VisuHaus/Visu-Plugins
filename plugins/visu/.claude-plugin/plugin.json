@@ -1,0 +1,34 @@
+{
+  "name": "visu",
+  "displayName": "Visu.Haus",
+  "description": "Create interactive Visu.Haus .visu visuals from prompts, references, and creative direction.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Visu.Haus",
+    "email": "hello@visu.haus"
+  },
+  "homepage": "https://visu.haus",
+  "repository": "https://github.com/VisuHaus/Visu-Plugins",
+  "keywords": [
+    "visu",
+    "visuhaus",
+    "visu-haus",
+    "generative-visuals",
+    "interactive-visuals",
+    "creative-coding",
+    "visual-tools",
+    "visual-generation",
+    "motion-design",
+    "design-tools",
+    "shader",
+    "webgl",
+    "threejs",
+    "canvas",
+    "typography",
+    "audio-reactive",
+    "video-shader",
+    "image-shader",
+    "mcp",
+    "my-visus"
+  ]
+}
