@@ -1,0 +1,18 @@
+Visu.Haus Claude Plugin License Notice
+
+The Visu.Haus Claude plugin package is licensed under the Apache License,
+Version 2.0. See the plugin package root `LICENSE` file for the full license
+text and the root `NOTICE` file for attribution, scope, and trademark notices.
+
+This license applies only to the Claude plugin package, including plugin
+manifests, skill files, local helper scripts, references, examples, and plugin
+documentation.
+
+It does not license the hosted Visu.Haus service, backend, editor, hosted APIs,
+databases, infrastructure, account systems, billing systems, user data, private
+prompts, saved visus, uploaded media, generated outputs stored in Visu.Haus
+accounts, or other server-side product code.
+
+No trademark license is granted. Visu.Haus, the Visu.Haus name, product names,
+logos, visual identity, and related brand assets may be used only to identify
+the origin of this plugin package or as otherwise permitted by applicable law.

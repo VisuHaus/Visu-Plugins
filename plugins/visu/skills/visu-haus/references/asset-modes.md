@@ -16,6 +16,8 @@ The runtime is always live in the iframe. Setting `mode` at generation time tell
 
 When the prompt is ambiguous (e.g. *"use mídia"*), prefer `multi-image` and branch at runtime by reading `assetState.mode` inside `onAssetChange`. The user's first upload sets the real mode; the editor will infer it from MIME and update the session.
 
+When image or video assets are drawn into a bounded area, expose a sibling `Fit` select control with options `["cover","fill"]` and default `cover`. `cover` preserves aspect ratio and crops overflow; `fill` stretches and may distort. Use the same rule for webcam video with `webcam_fit`.
+
 ## Build command by mode
 
 Use `--asset-mode` whenever the user asks for an editor-uploaded material and no actual asset item is bundled yet:
@@ -72,7 +74,7 @@ Every asset mode must satisfy both sides:
 
 Mode gates:
 
-- `video`: update a canvas/WebGL/Three texture every frame from `getVideoElement()` when `readyState >= 2`; fallback is animated, not blank.
+- `video`: update a canvas/WebGL/Three texture every frame from `getVideoElement()` when `readyState >= 2`; fallback is animated, not blank. Do not call `play()`, `setMuted()`, `setLoop()`, `pause()`, `togglePlayback()`, or `setCurrentTime()` from subscribe callbacks, asset-change handlers, or animation loops; the host owns playback setup.
 - `single-image`: sample `getPrimaryImage()` or first `getImages()` item only when loaded; fallback is procedural.
 - `multi-image`: call `getImages()` and handle 0, 1, and many images cleanly.
 - `audio`: call `getAudioData()` inside the animation loop; map `rms`, `bass`, `mid`, `treble`, `spectrum`, or `waveform` to visible motion.

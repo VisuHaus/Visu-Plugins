@@ -2,7 +2,7 @@
 
 Create interactive Visu.Haus visuals directly from your AI workspace.
 
-This marketplace installs the Visu.Haus plugin and the `/visu:create-visu`
+This marketplace installs the Visu.Haus plugin and the `/visu:visu-haus`
 skill. Use it to turn a prompt, image reference, brand direction, shader idea,
 or motion concept into a polished `.visu` visual.
 
@@ -14,7 +14,7 @@ Visu.Haus connection, or create a local `.visu` file for manual upload.
 Open your plugin settings, choose **Add marketplace**, and add:
 
 ```text
-Visu-Haus/Visu-Plugins
+VisuHaus/Visu-Plugins
 ```
 
 Then install and enable the **visu** plugin.
@@ -24,13 +24,13 @@ Then install and enable the **visu** plugin.
 Start with:
 
 ```text
-/visu:create-visu
+/visu:visu-haus
 ```
 
 Then describe what you want to make:
 
 ```text
-/visu:create-visu
+/visu:visu-haus
 Create a slow liquid chrome flower with soft orbiting particles, pointer
 interaction, and controls for bloom, density, color, and motion speed.
 ```
@@ -81,9 +81,41 @@ distortion, pointer pull, and a minimal editorial palette.
 - A Visu.Haus account to save directly to **My Visus**.
 - Local file support only if you want `.visu` files.
 
+## Public Links
+
+- Plugin repository: <https://github.com/VisuHaus/Visu-Plugins>
+- Visu.Haus: <https://visu.haus>
+- Installation guide: <https://visu.haus/articles/how-to-install-visuhaus-mcp>
+- Privacy policy: <https://visu.haus/privacy-policy>
+- Support: <hello@visu.haus>
+
+## License
+
+The Claude plugin package is licensed under Apache-2.0. This license applies
+only to the plugin package: manifests, skill files, local helper scripts,
+references, examples, and plugin documentation.
+
+The hosted Visu.Haus service, backend, editor, hosted APIs, databases,
+infrastructure, account systems, billing systems, user data, private prompts,
+saved visus, uploaded media, generated outputs stored in Visu.Haus accounts,
+and Visu.Haus brand assets are not licensed under the plugin package license.
+See the plugin `NOTICE` file for scope and trademark notices.
+
 ## Included
 
 - `visu` plugin
-- `/visu:create-visu` skill
+- `/visu:visu-haus` skill
 - Visu.Haus connection configuration
 - Local `.visu` builder for supported workflows
+
+## Reviewer Notes
+
+The plugin supports two delivery paths:
+
+- **Local file:** creates a `.visu` file without using the Visu.Haus connection.
+- **Account save:** uses the Visu.Haus connection to save directly to **My Visus**
+  and return a saved link.
+
+Only the account-save path requires signing in to Visu.Haus and authorizing the
+connection. The local-file path can be tested without account authorization in
+clients that allow local file creation.

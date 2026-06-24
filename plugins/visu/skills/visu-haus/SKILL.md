@@ -1,9 +1,19 @@
 ---
-name: create-visu
-version: 1.0.3
-description: Create, refine, iterate on, and save Visu.Haus .visu tools - interactive generative visuals with polished motion, controls, and optional webcam, typography, and editor-uploaded asset modes. Use when the user asks to create a visual tool, says "make a visu / Visu.Haus", asks for video shaders, image shaders, multi-image galleries, audio-reactive visuals, SVG/logo visuals, refines a previous visu, asks to save/publish, or describes a visual subject + material + motion the studio should ship.
+name: visu-haus
+version: 1.0.4
+description: Visu.Haus creates, refines, iterates on, and saves .visu tools - interactive generative visuals with polished motion, controls, and optional webcam, typography, and editor-uploaded asset modes. Use when the user invokes /visu:visu-haus, asks to use Visu.Haus, says "make a visu", asks for video shaders, image shaders, multi-image galleries, audio-reactive visuals, SVG/logo visuals, refines a previous visu, asks to save/publish, or describes a visual subject + material + motion the studio should ship.
 argument-hint: [visual brief, reference, or saved visu link]
-allowed-tools: [mcp__visu__get_account_status, mcp__visu__build_and_save_visu, mcp__visu__get_latest_saved_visu_link]
+allowed-tools:
+  - mcp__visu__get_account_status
+  - mcp__visu__build_and_save_visu
+  - mcp__visu__get_latest_saved_visu_link
+  - mcp__visu__get_my_visu_link
+  - mcp__visu__list_my_visus
+  - mcp__visu__search_my_visus
+  - mcp__visu__duplicate_my_visu
+  - mcp__visu__rename_my_visu
+  - mcp__visu__update_saved_visu
+  - mcp__visu__save_visu_version
 ---
 
 # Visu.Haus
@@ -116,11 +126,12 @@ Run this routing step before code and before build. This is a hard contract, not
 
 | User intent in the prompt | Save `assets.mode` as | HTML must consume |
 |---|---|---|
-| video shader, video texture, clip feedback, kaleidoscope a video, "usar video" | `video` | `window.__VISU_ASSET_RUNTIME.getVideoElement()` or `getVideo()` |
+| video shader, video texture, clip feedback, kaleidoscope a video, "usar video" | `video` | `window.__VISU_ASSET_RUNTIME.getVideoElement()` or `getVideo()` as a read-only frame source |
 | gallery, carousel, multiple photos, atlas, image sequence, "minhas fotos" | `multi-image` | `getImages()` |
 | image shader, single photo, texture from image, "usar minha imagem/foto" | `single-image` | `getPrimaryImage()` or first `getImages()` item |
-| audio reactive, music, beat, spectrum, waveform, "musica/som/batida" | `audio` | `getAudioData()` or `getAudioElement()` |
+| audio reactive, music, beat, spectrum, waveform, "musica/som/batida" | `audio` | `getAudioData()` analysis object |
 | SVG/logo/vector/path animation/recolor | `svg` | `window.__VISU_SVG_RUNTIME` or `getSvg()` |
+| 3D model, GLB, GLTF, model viewer, uploaded 3D object, "modelo 3d" | `model3d` | `getModelUrl()` / `getModel()` or field model helpers |
 
 For an upload that will happen later in the editor, still set the mode with empty items:
 
@@ -128,7 +139,9 @@ For an upload that will happen later in the editor, still set the mode with empt
 { "mode": "video", "lastMode": "video", "revision": 0, "items": [] }
 ```
 
-Use the same shape for `single-image`, `multi-image`, `audio`, and `svg`. Only use `none` when the prompt does not imply uploaded assets. The HTML must always subscribe to `window.__VISU_ASSET_RUNTIME`, must render a designed procedural fallback while `items` is empty, and must not create its own file picker, upload UI, drag-drop UI, or remote fetch path.
+Use the same shape for `single-image`, `multi-image`, `audio`, `video`, `svg`, and `model3d`. Only use `none` when the prompt does not imply uploaded assets. The HTML must always subscribe to `window.__VISU_ASSET_RUNTIME`, must render a designed procedural fallback while `items` is empty, and must not create its own file picker, upload UI, drag-drop UI, or remote fetch path. For audio assets, `getAudioData()` returns an analysis object with `rms`, `peak`, `bass`, `mid`, `treble`, `spectrum`, `waveform`, `frequencyData`, and `timeDomainData`; do not treat it as a raw array. For video assets, do not call `play()`, `setMuted()`, `setLoop()`, `pause()`, `togglePlayback()`, or `setCurrentTime()` from subscribe callbacks, asset-change handlers, or animation loops; the host owns playback setup.
+
+When drawing an uploaded image asset, video asset, or webcam video into a bounded area, include a `Fit` select control with options `["cover","fill"]` and default `cover`. Use key `<media_key>_fit` for asset fields or `webcam_fit` for webcam. `cover` preserves aspect ratio and crops overflow; `fill` may stretch.
 
 When `assets.mode != "none"`, include an Asset line in the design echo. Example: `Asset: upload a video in the sidebar; until then, a liquid gradient drives the shader.`
 
@@ -224,6 +237,7 @@ When running from another current directory, use the script by absolute or skill
 - Include the Visu.Haus message bridge for `cfg_update`, `camera_update`, `request_snapshot`, `cfg_schema`.
 - **Always include the asset listener.** Register `window.__VISU_ASSET_RUNTIME.subscribe(onAssetChange)` in every visu, even when the prompt doesn't mention assets. The runtime is always present in the host iframe; without a subscribe, uploads injected by the editor fall into a deaf iframe. The callback fires immediately with the current state and again on every upload, removal, or playback change.
 - **Set `assets.mode` when the prompt declares intent.** If the user mentions gallery/multiple photos, one image/texture, audio/music, video, or svg, build with `--asset-mode multi-image|single-image|audio|video|svg` even when `items` is empty. The editor opens the correct uploader from this field. The HTML must consume that mode with a designed fallback when `state.items` is empty. See `references/asset-modes.md`.
+- **Do not distort media by default.** Image assets, video assets, and webcam video drawn into bounded areas need a `Fit` select with `cover` first/default and `fill` second.
 - Never call `getUserMedia`, MediaPipe, TensorFlow, or webcam permission UI in the iframe — host runtime handles it.
 - No debug HUDs, telemetry, tutorial overlays, or "click here" labels in 2D visuals.
 - Prefer continuous motion over keyframed loops. Prefer one strong interaction over three weak ones. Prefer named palettes over random hues.

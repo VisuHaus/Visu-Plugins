@@ -112,11 +112,13 @@ Use `data` for base64 image payloads without the `data:mime;base64,` prefix. Use
 }
 ```
 
-Supported modes: `none`, `single-image`, `multi-image`, `audio`, `video`, `svg`.
+Supported modes: `none`, `single-image`, `multi-image`, `audio`, `video`, `svg`, `model3d`.
 
-Supported item kinds: `image`, `audio`, `video`, `svg`. Multi-image mode uses multiple `image` items.
+Supported item kinds: `image`, `audio`, `video`, `svg`, `model3d`. Multi-image mode uses multiple `image` items.
 
 SVG items should include sanitized `svgText` and may include `manifest` / `generationContext` describing paint targets, dimensions, ids, or semantic regions.
+
+Model3D items should normally be GLB/GLTF descriptors with `dataUrl`, `url`, `src`, or `objectUrl` when embedded or injected by the host.
 
 > **`mode` is a UI hint, not a runtime toggle.** Setting `mode` to a non-`none` value at generation time tells the editor sidebar to open the matching uploader. `items` can be empty `[]` — the user fills them later. The `__VISU_ASSET_RUNTIME` is always live in the iframe regardless of `mode`, so registering a `subscribe` is the right default even when `mode` is `none`. See `references/asset-modes.md` for prompt-to-mode mapping and `references/runtime-capabilities.md` for the consumption snippets.
 

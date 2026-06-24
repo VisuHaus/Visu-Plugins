@@ -2,13 +2,14 @@
   "name": "visu",
   "displayName": "Visu.Haus",
   "description": "Create interactive Visu.Haus .visu visuals from prompts, references, and creative direction.",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": {
     "name": "Visu.Haus",
     "email": "hello@visu.haus"
   },
   "homepage": "https://visu.haus",
   "repository": "https://github.com/VisuHaus/Visu-Plugins",
+  "license": "Apache-2.0",
   "keywords": [
     "visu",
     "visuhaus",

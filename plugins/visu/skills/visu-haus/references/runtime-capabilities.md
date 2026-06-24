@@ -5,10 +5,11 @@ Use this reference when writing the HTML inside a `.visu`.
 ## Core HTML Rules
 
 - Return a complete HTML document.
-- Fill the viewport: `body{margin:0;overflow:hidden;background:#000}`.
+- Fill the viewport: `body{margin:0;overflow:hidden;background:transparent}`.
+- Draw the artwork background inside the scene, not with body CSS. If `background_filled` exists, draw that backdrop only when `background_filled` is true so preview/export can produce real alpha when it is false.
 - Use a canvas, SVG, DOM, WebGL, Three.js scene, or hybrid renderer as appropriate.
 - Use `var` and `function` syntax in generated runtime code.
-- Use `requestAnimationFrame` and keep animation alive unless `_animEnabled` is false.
+- Use `requestAnimationFrame` and keep animation alive.
 - Do not depend on a build step.
 
 ## Controls
@@ -17,22 +18,39 @@ Expose editable controls as:
 
 ```js
 var cfg = {
-  _animEnabled: { value: true, type: 'toggle', label: 'Animate', group: 'Motion' },
   quantity: { value: 40, type: 'slider', label: 'Quantity', group: 'Shapes', min: 1, max: 100, step: 1 },
   size: { value: 72, type: 'slider', label: 'Size', group: 'Shapes', min: 1, max: 200, step: 1, unit: 'px' },
   colorA: { value: '#f24b2f', type: 'color', label: 'Primary', group: 'Colors' }
 };
 ```
 
-Types: `slider`, `color`, `text`, `toggle`, `dropdown`.
+Types: `slider`, `number`, `color`, `toggle`, `select`, `text`, `textarea`, `button`, `asset`.
 
-Dropdown example:
+Select example:
 
 ```js
-blendMode: { value: 'screen', type: 'dropdown', label: 'Blend', group: 'Effects', options: ['normal','multiply','screen','overlay','add'] }
+blendMode: { value: 'screen', type: 'select', label: 'Blend', group: 'Effects', options: ['normal','multiply','screen','overlay','add'] }
 ```
 
-Design controls for the specific visual. Include quantity/count, size/scale, core motion speed, palette controls, and only the effects that matter.
+Design controls as art-direction knobs for the specific visual, not generic sliders. Include practical controls such as color, size, quantity/count, speed, motion intensity, opacity, spacing, scale, rotation, density, and background when relevant. Include artistic controls when they fit: chaos, order, tension, softness, turbulence, gravity, magnetism, elasticity, rhythm, distortion, contrast, grain, bloom, depth, complexity, randomness, symmetry, fragmentation, fluidity, and atmosphere.
+
+Always include `quantity/count` when the visual has repeated elements, particles, instances, objects, strokes, letters, or generated units. Always include `size` when the visual has scalable shapes, objects, particles, typography, brush marks, images, or model elements. Always include a primary motion speed/intensity control when the visual has automatic animation or procedural motion.
+
+Prefer fewer high-impact controls over many low-value controls. Defaults must produce the best-looking result immediately.
+
+Host-rendered controls should also be declared in:
+
+```html
+<script id="visu-metadata" type="application/json">{"toolSchema":{"controls":[{"key":"background_filled","type":"toggle","label":"Filled Background","group":"Background","defaultValue":true},{"key":"shuffle_layout","type":"button","label":"Shuffle Layout","group":"Actions"},{"key":"background_image","type":"asset","kind":"image","label":"Background Image","group":"Layers","maxItems":1}]},"stage":{"background":{"transparent":true,"color":"#ffffff","opacity":1}}}</script>
+```
+
+Button controls are momentary actions, not persistent toggles. Listen for `visu:control-action` or `message.type === "visu_control_action"`.
+
+Asset controls are runtime file fields. Allowed asset kinds are `image`, `image-set`, `audio`, `video`, `svg`, and `model3d`. Do not declare `font`, `other`, `generic`, `unknown`, or arbitrary file asset fields.
+
+When drawing an uploaded image asset, video asset, or webcam video into a bounded area, add a sibling `Fit` select control. Use key `<media_key>_fit` for asset fields or `webcam_fit` for webcam, options `["cover","fill"]`, and default `cover`. `cover` preserves aspect ratio and crops overflow; `fill` stretches to the bounds and may distort.
+
+If the visual draws a full-canvas/full-page background, include `background_filled` as a toggle labelled "Filled Background" in group "Background" with `defaultValue:true`. Transparent background is opt-out: when `background_filled` is false, do not draw the scene backdrop. For these visuals, set `stage.background.transparent:true` so disabling the toggle reveals real transparency in preview and PNG export.
 
 ## Message Bridge
 
@@ -40,14 +58,11 @@ Every visual must include this contract, adapted as needed:
 
 ```js
 var _cameraZoom = 1, _cameraPanX = 0, _cameraPanY = 0, _cameraOrbitX = 0, _cameraOrbitY = 0;
-var _animEnabled = true, _effectsEnabled = true;
 
 window.addEventListener('message', function(e) {
   if (!e.data) return;
   if (e.data.type === 'cfg_update') {
-    if (e.data.key === '_animEnabled') _animEnabled = e.data.value;
-    else if (e.data.key === '_effectsEnabled') _effectsEnabled = e.data.value;
-    else if (cfg[e.data.key]) cfg[e.data.key].value = e.data.value;
+    if (cfg[e.data.key]) cfg[e.data.key].value = e.data.value;
   }
   if (e.data.type === 'camera_update') {
     _cameraZoom = e.data.zoom || 1;
@@ -82,9 +97,11 @@ For Three.js camera controls, map zoom/pan/orbit to the camera and call `camera.
 
 ## Renderer Choice
 
-- Use WebGL 2D for SDFs, contours, metaballs, smooth gradients, glows, raymarch-like fields, shader noise, and high-density pixel effects.
-- Use Canvas 2D for particles, dot grids, line systems, typography masks, image sampling, and simpler geometry.
-- Use Three.js when the prompt asks for 3D, perspective, meshes, depth, orbiting camera, cube, sphere, torus, room, sculpture, or physical materials.
+- Prefer WebGPU for modern GPU-driven visuals: SDFs, ray marching, flow fields, glows, gradients, particles, feedback textures, reaction-diffusion, image/video processing, simulations, large grids, and multi-pass generative systems. Feature-detect with `navigator.gpu`; if unavailable at runtime, initialize an equivalent WebGL2 path.
+- Use WebGL2 for medium-complexity shader visuals or runtime compatibility: SDFs, contours, metaballs, smooth gradients, glows, raymarch-like fields, shader noise, and high-density pixel effects.
+- Use Three.js for stylized, toon, abstract, mograph, generative, shader-driven, or lightweight 3D visuals.
+- Use Babylon.js when the prompt asks for realistic render quality, product/PBR rendering, physical materials, studio lighting, shadows, reflections, glass, metal, plastic, or premium inspectable 3D objects.
+- Use Canvas 2D, p5.js, or another non-GPU/simple renderer only when explicitly requested, or as a last-resort compatibility path to avoid a blank canvas.
 - Use hybrid rendering when assets, text, or overlays need a 2D layer over WebGL/Three.js.
 
 Three.js CDN:
@@ -93,9 +110,15 @@ Three.js CDN:
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 ```
 
+For WebGPU, use one visible canvas, async initialization, inline WGSL, render pipelines, uniform buffers, storage buffers when useful, and `requestAnimationFrame`. Keep it self-contained: no build tools, bundlers, external shader files, or server GPU work. Update uniforms/buffers from `cfg` so controls stay live and keep snapshot/export support from the visible canvas.
+
+For Babylon.js, use one visible canvas, `Engine`, `Scene`, `ArcRotateCamera`, lights, environment lighting when useful, PBR materials, and GLB/GLTF loading. Keep the uploaded/fallback model centered, scaled, lit, and visible.
+
 ## WebGL Rules
 
 - Use `preserveDrawingBuffer:true` for snapshots.
+- If using WebGL2 with `#version 300 es`, GLSL must use `in`/`out` varyings, an explicit fragment output, and `texture()`. Do not use `varying`, `gl_FragColor`, or `texture2D()` in WebGL2 shaders. If sharing shader code with WebGL1, gate syntax with `#ifdef WEBGL2` / `#else`.
+- Do not declare custom GLSL identifiers beginning with `gl_`; that prefix is reserved for built-in names.
 - Avoid uniform loop bounds. Use literal constants:
 
 ```glsl
@@ -112,15 +135,17 @@ for (int i = 0; i < MAX_SHAPES; i++) {
 
 Every visual needs continuous motion and interaction:
 
+- Motion should emerge from the procedural system, not random decoration.
+- Use easing, anticipation, follow-through, overshoot, elastic return, damping, inertia, stagger, delay, and rhythm.
 - Drift, orbit, breathing, rotation, flow, phase shift, feedback, or kinetic layout.
-- Pointer attract/repel/follow/drag/orbit/brush, matched to the concept.
+- Pointer attract/repel/follow/drag/orbit/brush, matched to the concept, with eased response rather than instant jumps.
 - Reset pointer state on leave:
 
 ```js
 canvas.addEventListener('mouseleave', function(){ mx = -9999; my = -9999; });
 ```
 
-Use damping around `0.96` to `0.99` for physics. Add a small velocity boost to prevent dead particles.
+Use damping around `0.96` to `0.99` for physics. Add a small velocity boost to prevent dead particles. Match motion to style: minimal/geometric uses slow easing; organic/fluid uses breathing and soft damping; energetic/chaotic uses bursts and controlled randomness; editorial/type uses readable staggered timing; 3D uses smooth orbit, inertial camera movement, eased zoom, and object rotation.
 
 ## Webcam Capability
 
@@ -173,12 +198,12 @@ User uploads always land in `session.assets`. `session.source` is reserved for A
 ```js
 {
   version: 1,
-  mode: 'none' | 'single-image' | 'multi-image' | 'audio' | 'video' | 'svg',
+  mode: 'none' | 'single-image' | 'multi-image' | 'audio' | 'video' | 'svg' | 'model3d',
   updatedAt: 1715000000000,
   items: [
     {
       id: 'asset-1',
-      kind: 'image' | 'audio' | 'video' | 'svg',
+      kind: 'image' | 'audio' | 'video' | 'svg' | 'model3d',
       name: 'photo.jpg',
       mime: 'image/jpeg',
       size: 12345,
@@ -188,7 +213,7 @@ User uploads always land in `session.assets`. `session.source` is reserved for A
       generationContext: ''
     }
   ],
-  audio: { playing, currentTime, duration, muted, loop, rms, peak, bass, mid, treble, spectrum: float[16], waveform: float[32] },
+  audio: { playing, currentTime, duration, muted, loop, rms, peak, bass, mid, treble, spectrum: float[16], waveform: float[32], frequencyData, timeDomainData },
   video: { playing, currentTime, duration, muted, loop }
 }
 ```
@@ -219,6 +244,29 @@ window.addEventListener('visu:asset-change', function(e){ onAssetChange(e.detail
 
 Pick the right accessor based on `assetState.mode` (or call without checking - the runtime returns null/empty when nothing is loaded). Always render a designed fallback when the asset is absent. If the HTML is opened outside the editor, `assetRuntime` may be null; keep the fallback alive.
 
+For asset controls declared in `toolSchema`, use `window.__VISU_ASSET_RUNTIME.getField(fieldKey)`. Field helpers include `getItems()`, `getPrimary()`, `getImage()`, `getImages()`, `getAudioElement()`, `getAudioData()`, `getVideoElement()`, `getSvg()`, `getModel()`, `getModelUrl()`, `getModelBlob()`, `getModelArrayBuffer()`, `hasFiles()`, and `subscribe(fn)`.
+
+For Canvas 2D media drawing, use a fit helper instead of stretching by default:
+
+```js
+function drawMediaFitted(ctx, media, x, y, w, h, fit) {
+  var mw = media.videoWidth || media.naturalWidth || media.width;
+  var mh = media.videoHeight || media.naturalHeight || media.height;
+  if (!mw || !mh) return false;
+  if (fit === 'fill') {
+    ctx.drawImage(media, x, y, w, h);
+    return true;
+  }
+  var scale = Math.max(w / mw, h / mh);
+  var sw = w / scale;
+  var sh = h / scale;
+  var sx = (mw - sw) / 2;
+  var sy = (mh - sh) / 2;
+  ctx.drawImage(media, sx, sy, sw, sh, x, y, w, h);
+  return true;
+}
+```
+
 - **single-image** / **multi-image**:
 
   ```js
@@ -241,17 +289,17 @@ Pick the right accessor based on `assetState.mode` (or call without checking - t
   var pulse = a ? Math.max(0.05, a.rms) : 0.12 + 0.05 * Math.sin(time);
   ```
 
-  The host element auto-plays after the user hits play in the sidebar. `setMuted`, `setLoop`, `setCurrentTime` control playback.
+  The host element plays after the user hits play in the sidebar. `getAudioData()` returns an analysis object, not a raw array: `{ playing, currentTime, duration, rms, peak, bass, mid, treble, spectrum, waveform, frequencyData, timeDomainData }`. Use `rms`, `peak`, `bass`, `mid`, `treble`, `spectrum`, `waveform`, or `frequencyData` for reaction. Do not rely on `audioData.length` or `audioData[i]` as the primary contract. Do not autoplay audio or create separate audio elements.
 
 - **video**:
 
   ```js
   var v = assetRuntime ? assetRuntime.getVideoElement() : null;
-  if (v && v.readyState >= 2) ctx.drawImage(v, 0, 0, W, H);
+  if (v && v.readyState >= 2) drawMediaFitted(ctx, v, 0, 0, W, H, cfg.video_fit.value);
   else drawAnimatedGradient();
   ```
 
-  The video element is muted, autoplay, looped - sample frames into canvas/WebGL/Three.js textures every frame. For WebGL video shaders, use this minimum texture update pattern:
+  The video element is muted, autoplay, looped - sample frames into canvas/WebGL/Three.js textures every frame. Do not call `play()`, `setMuted()`, `setLoop()`, `pause()`, `togglePlayback()`, or `setCurrentTime()` from subscribe callbacks, asset-change handlers, or animation loops; the host owns playback setup. For WebGL video shaders, use this minimum texture update pattern:
 
   ```js
   var videoTex = gl.createTexture();
@@ -285,6 +333,10 @@ Pick the right accessor based on `assetState.mode` (or call without checking - t
 
   Other helpers: `parse()`, `mountHidden()`, `loadImage()` (rasterizes), `getPaintTargets(root)`.
 
+- **model3d**:
+
+  Use `assetRuntime.getModelUrl()` for global model assets or `assetRuntime.getField(fieldKey).getModelUrl()` for declared `model3d` fields. The host provides a file descriptor or URL, not a ready `THREE.Object3D`. For GLB/GLTF, use the classic compatible loader path: `three@0.160.0/build/three.min.js` plus `three@0.146.0/examples/js/loaders/GLTFLoader.js`, then `new THREE.GLTFLoader()`. Keep the current/fallback model visible until the replacement model finishes loading successfully.
+
 ### Mode reference
 
 - `none`: no uploader hint; runtime is still live so listener catches future uploads.
@@ -293,6 +345,7 @@ Pick the right accessor based on `assetState.mode` (or call without checking - t
 - `audio`: audio analysis, waveform, spectrum, beat-like amplitude.
 - `video`: sample video frames, feedback, masks, chroma-like effects.
 - `svg`: recolor, animate paths, use as mask, clone inline nodes, or render as image.
+- `model3d`: load GLB/GLTF as the primary scene object, with a procedural fallback while absent.
 
 Do not invent asset files. Use what `state.items` exposes, and fall back gracefully when absent.
 

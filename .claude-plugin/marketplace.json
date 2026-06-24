@@ -15,7 +15,8 @@
       },
       "source": "./plugins/visu",
       "category": "design",
-      "homepage": "https://visu.haus"
+      "homepage": "https://visu.haus",
+      "license": "Apache-2.0"
     }
   ]
 }
